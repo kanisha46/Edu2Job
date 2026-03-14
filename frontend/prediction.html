@@ -149,11 +149,15 @@
             });
           }, 100);
 
-          // Save prediction to localStorage
+          // Save prediction to localStorage and server
           const topPred = res.predictions[0];
+          const predEntry = { role: topPred.role, confidence: Math.round(topPred.confidence), date: new Date().toLocaleDateString() };
           const saved = JSON.parse(localStorage.getItem('edu2job_predictions') || '[]');
-          saved.push({ role: topPred.role, confidence: Math.round(topPred.confidence), date: new Date().toLocaleDateString() });
+          saved.push(predEntry);
           localStorage.setItem('edu2job_predictions', JSON.stringify(saved));
+
+          // Persist to MongoDB
+          try { await apiPost('/profile/predictions', predEntry); } catch (e) { console.warn('Could not save prediction to server:', e); }
 
           // Explanations
           if (res.predictions[0].explanation) {

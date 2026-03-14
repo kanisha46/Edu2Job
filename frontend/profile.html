@@ -127,21 +127,37 @@
     requireAuth();
     renderSidebar('profile', 'light');
 
-    const user = getUser();
-    if (user) {
-      document.getElementById('degree').value = user.degree || '';
-      document.getElementById('gpa').value = user.gpa || '';
-      document.getElementById('experience').value = user.experience || '';
-      document.getElementById('certifications').value = user.certifications || '';
-      if (user.skills) {
-        user.skills.split(',').forEach(s => { if (s.trim()) addSkillTag(s.trim()); });
+    // Fetch fresh profile from server, then populate form
+    (async function loadProfile() {
+      let user = getUser(); // fallback from localStorage
+      try {
+        const res = await apiGet('/profile/me');
+        if (res && res.user) {
+          user = res.user;
+          localStorage.setItem('edu2job_user', JSON.stringify(user));
+        }
+      } catch (err) {
+        console.warn('Could not fetch profile from server, using localStorage:', err);
       }
-    }
+      if (user) {
+        document.getElementById('degree').value = user.degree || '';
+        document.getElementById('gpa').value = user.gpa || '';
+        document.getElementById('experience').value = user.experience || '';
+        document.getElementById('certifications').value = user.certifications || '';
+        if (user.skills) {
+          skills = [];
+          user.skills.split(',').forEach(s => {
+            const trimmed = s.trim();
+            if (trimmed) { skills.push(trimmed); addSkillTag(trimmed); }
+          });
+        }
+      }
+    })();
 
     // Skill tags
     const skillInput = document.getElementById('skillInput');
     const skillsWrapper = document.getElementById('skillsWrapper');
-    let skills = user && user.skills ? user.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
+    let skills = [];
 
     skillInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {

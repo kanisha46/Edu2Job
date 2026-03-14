@@ -59,6 +59,27 @@
         if (res.token) {
           localStorage.setItem('edu2job_token', res.token);
           localStorage.setItem('edu2job_user', JSON.stringify(res.user));
+
+          // Fetch full profile from the server (includes resume, skills, etc.)
+          try {
+            const profile = await apiGet('/profile/me');
+            if (profile && profile.user) {
+              localStorage.setItem('edu2job_user', JSON.stringify(profile.user));
+            }
+          } catch (err) {
+            console.warn('Could not fetch full profile:', err);
+          }
+
+          // Fetch saved predictions from the server
+          try {
+            const predRes = await apiGet('/profile/predictions');
+            if (predRes && predRes.predictions) {
+              localStorage.setItem('edu2job_predictions', JSON.stringify(predRes.predictions));
+            }
+          } catch (err) {
+            console.warn('Could not fetch predictions:', err);
+          }
+
           showToast('Login successful!', 'success');
           setTimeout(() => window.location.href = 'dashboard.html', 800);
         } else {

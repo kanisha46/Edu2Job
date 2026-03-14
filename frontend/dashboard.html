@@ -72,9 +72,31 @@
     requireAuth();
     renderSidebar('dashboard', 'dark');
 
-    const user = getUser();
-    if (user) {
-      const predictions = JSON.parse(localStorage.getItem('edu2job_predictions') || '[]');
+    (async function loadDashboard() {
+      const user = getUser();
+
+      // Fetch fresh profile to check resume status
+      try {
+        const profileRes = await apiGet('/profile/me');
+        if (profileRes && profileRes.user) {
+          localStorage.setItem('edu2job_user', JSON.stringify(profileRes.user));
+          if (profileRes.user.resume_path) {
+            document.getElementById('statResume').textContent = 'Uploaded';
+            document.getElementById('statusDot').style.display = 'inline-block';
+          }
+        }
+      } catch (e) { console.warn('Could not fetch profile:', e); }
+
+      // Fetch predictions from server
+      let predictions = JSON.parse(localStorage.getItem('edu2job_predictions') || '[]');
+      try {
+        const predRes = await apiGet('/profile/predictions');
+        if (predRes && predRes.predictions && predRes.predictions.length > 0) {
+          predictions = predRes.predictions;
+          localStorage.setItem('edu2job_predictions', JSON.stringify(predictions));
+        }
+      } catch (e) { console.warn('Could not fetch predictions:', e); }
+
       document.getElementById('statPredictions').textContent = predictions.length;
 
       if (predictions.length > 0) {
@@ -97,7 +119,7 @@
         });
         document.getElementById('recentPredictions').innerHTML = html;
       }
-    }
+    })();
   </script>
 </body>
 </html>
