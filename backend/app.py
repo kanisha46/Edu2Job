@@ -3,11 +3,7 @@ app.py – Flask application entry point.
 Loads ML model on startup, registers all routes, enables CORS.
 Serves frontend static files from ../frontend directory.
 """
-#------------------------------------------------------------
 
-
-
-#-----------------------------------------------------------
 import os
 import sys
 import logging
