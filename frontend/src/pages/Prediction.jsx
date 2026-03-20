@@ -58,7 +58,7 @@ const Prediction = () => {
         skills: user.skills || prev.skills
       }));
     }
-  }, [user, navigate]);
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });

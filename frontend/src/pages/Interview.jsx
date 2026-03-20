@@ -8,7 +8,7 @@ const Interview = () => {
 
   useEffect(() => {
     if (!getUser()) navigate('/login');
-  }, [navigate]);
+  }, []);
 
   return (
     <div className="app-layout">

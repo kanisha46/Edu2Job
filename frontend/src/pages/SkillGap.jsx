@@ -10,7 +10,7 @@ const SkillGap = () => {
 
   useEffect(() => {
     if (!getUser()) navigate('/login');
-  }, [navigate]);
+  }, []);
 
   const skillGaps = [
     {
