@@ -47,14 +47,24 @@ def generate_dataset(num_samples: int = 1200) -> str:
     random.seed(42)
 
     degrees = ["B.Tech", "M.Tech", "B.Sc", "M.Sc", "BCA", "MCA", "B.E", "MBA"]
+    branches = [
+        "Computer Science", "IT", "ECE", "EE", "ME",
+        "Civil", "AI/ML", "Data Science", "BBA", "MBA", "Chemical", "Other",
+    ]
     job_roles = [
         "Software Engineer", "Data Scientist", "Frontend Developer",
         "Backend Developer", "DevOps Engineer", "ML Engineer",
         "Full Stack Developer", "Cloud Architect",
+        "Mechanical Engineer", "Civil Engineer", "Electrical Engineer",
+        "Business Analyst", "HR Manager", "Marketing Executive",
+        "Chemical Engineer"
     ]
     all_skills = [
         "python", "java", "javascript", "react", "sql",
         "aws", "docker", "machine_learning",
+        "autocad", "solidworks", "ansys", "matlab", "plc", "scada",
+        "management", "marketing", "finance", "communication", "sales",
+        "chemistry", "process_engineering", "hysys", "thermodynamics"
     ]
 
     # Skill-to-role affinity mapping for realistic patterns
@@ -67,6 +77,32 @@ def generate_dataset(num_samples: int = 1200) -> str:
         "ML Engineer":            ["python", "machine_learning", "aws"],
         "Full Stack Developer":   ["javascript", "react", "python", "sql"],
         "Cloud Architect":        ["aws", "docker", "python"],
+        "Mechanical Engineer":    ["autocad", "solidworks", "matlab", "ansys"],
+        "Civil Engineer":         ["autocad", "ansys", "management"],
+        "Electrical Engineer":    ["matlab", "plc", "scada", "autocad"],
+        "Business Analyst":       ["sql", "communication", "management", "finance"],
+        "HR Manager":             ["communication", "management"],
+        "Marketing Executive":    ["marketing", "communication", "management", "sales"],
+        "Chemical Engineer":      ["chemistry", "process_engineering", "hysys", "thermodynamics", "matlab"],
+    }
+
+    # Branch-to-role affinity mapping for realistic patterns
+    role_branch_map = {
+        "Software Engineer":      ["Computer Science", "IT", "AI/ML", "ECE"],
+        "Data Scientist":         ["Computer Science", "Data Science", "AI/ML", "IT"],
+        "Frontend Developer":     ["Computer Science", "IT"],
+        "Backend Developer":      ["Computer Science", "IT", "ECE"],
+        "DevOps Engineer":        ["Computer Science", "IT"],
+        "ML Engineer":            ["Computer Science", "AI/ML", "Data Science"],
+        "Full Stack Developer":   ["Computer Science", "IT"],
+        "Cloud Architect":        ["Computer Science", "IT"],
+        "Mechanical Engineer":    ["ME", "Other"],
+        "Civil Engineer":         ["Civil", "Other"],
+        "Electrical Engineer":    ["EE", "ECE"],
+        "Business Analyst":       ["MBA", "BBA", "IT", "Computer Science"],
+        "HR Manager":             ["MBA", "BBA", "Other"],
+        "Marketing Executive":    ["MBA", "BBA", "Other"],
+        "Chemical Engineer":      ["Chemical", "Other"],
     }
 
     rows = []
@@ -74,6 +110,13 @@ def generate_dataset(num_samples: int = 1200) -> str:
         role = random.choice(job_roles)
         degree = random.choice(degrees)
         gpa = round(random.uniform(5.5, 10.0), 2)
+
+        # Pick a branch that matches the role most of the time (80%),
+        # else a random branch for noise
+        if random.random() < 0.80:
+            branch = random.choice(role_branch_map[role])
+        else:
+            branch = random.choice(branches)
 
         skills = {s: 0 for s in all_skills}
         for s in role_skill_map[role]:
@@ -85,6 +128,7 @@ def generate_dataset(num_samples: int = 1200) -> str:
 
         row = {
             "degree": degree,
+            "branch": branch,
             "gpa": gpa,
             "num_certs": random.randint(0, 5),
             "num_projects": random.randint(1, 8),
@@ -115,12 +159,16 @@ def train(dataset_path: str):
     le_degree = LabelEncoder()
     df["degree_encoded"] = le_degree.fit_transform(df["degree"])
 
+    # Encode branch
+    le_branch = LabelEncoder()
+    df["branch_encoded"] = le_branch.fit_transform(df["branch"])
+
     # Encode target
     le_role = LabelEncoder()
     y = le_role.fit_transform(df["job_role"])
 
-    # Features
-    X = df.drop(columns=["degree", "job_role"])
+    # Features (drop raw text columns and target)
+    X = df.drop(columns=["degree", "branch", "job_role"])
     feature_columns = list(X.columns)
 
     # Split
@@ -163,6 +211,7 @@ def train(dataset_path: str):
     joblib.dump(best_model,       os.path.join(MODEL_DIR, "model.pkl"))
     joblib.dump(scaler,           os.path.join(MODEL_DIR, "scaler.pkl"))
     joblib.dump(le_degree,        os.path.join(MODEL_DIR, "encoder_degree.pkl"))
+    joblib.dump(le_branch,        os.path.join(MODEL_DIR, "encoder_branch.pkl"))
     joblib.dump(le_role,          os.path.join(MODEL_DIR, "encoder_role.pkl"))
     joblib.dump(feature_columns,  os.path.join(MODEL_DIR, "feature_columns.pkl"))
     logger.info(f"Model artifacts saved → {MODEL_DIR}")

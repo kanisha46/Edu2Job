@@ -26,6 +26,9 @@ KNOWN_SKILLS = [
     "excel", "power bi", "tableau",
     "rest api", "graphql", "microservices", "ci/cd", "agile", "scrum",
     "figma", "photoshop", "illustrator",
+    "autocad", "solidworks", "ansys", "plc", "scada",
+    "management", "marketing", "finance", "communication", "sales",
+    "chemistry", "process engineering", "hysys", "thermodynamics"
 ]
 
 # ---------------------------------------------------------------------------
@@ -46,6 +49,24 @@ DEGREE_PATTERNS = [
     (r"\b(?:M\.?\s*A\.?|Master\s+of\s+Arts)\b", "M.A"),
     (r"\b(?:B\.?\s*Com|Bachelor\s+of\s+Commerce)\b", "B.Com"),
     (r"\b(?:Diploma)\b", "Diploma"),
+]
+
+# ---------------------------------------------------------------------------
+# Branch / specialization patterns
+# ---------------------------------------------------------------------------
+BRANCH_PATTERNS = [
+    (r"\b(?:Computer\s+Science|CS|CSE|C\.S\.E?\.?)\b", "Computer Science"),
+    (r"\b(?:Information\s+Technology|IT|I\.T\.?)\b", "IT"),
+    (r"\b(?:Electronics\s*(?:and|&)\s*Communication|ECE|E\.C\.E?\.?)\b", "ECE"),
+    (r"\b(?:Electrical\s+Engineering|EE|E\.E\.?)\b", "EE"),
+    (r"\b(?:Mechanical\s+Engineering|ME|M\.E\.?)\b", "ME"),
+    (r"\b(?:Civil\s+Engineering)\b", "Civil"),
+    (r"\b(?:Artificial\s+Intelligence|AI|AI\s*(?:/|&|and)\s*ML)\b", "AI/ML"),
+    (r"\b(?:Data\s+Science|DS)\b", "Data Science"),
+    (r"\b(?:Software\s+Engineering|SE)\b", "Software Engineering"),
+    (r"\b(?:Electronics)\b", "Electronics"),
+    (r"\b(?:Business\s+Admin|BBA)\b", "BBA"),
+    (r"\b(?:Chemical\s+Engineering|ChemE|Chemical)\b", "Chemical"),
 ]
 
 # ---------------------------------------------------------------------------
@@ -149,6 +170,14 @@ def extract_degree(text):
     return ""
 
 
+def extract_branch(text):
+    """Find the educational branch / specialization."""
+    for pattern, label in BRANCH_PATTERNS:
+        if re.search(pattern, text, re.IGNORECASE):
+            return label
+    return ""
+
+
 def extract_experience(text):
     """Extract years of experience."""
     for pattern in EXPERIENCE_PATTERNS:
@@ -201,6 +230,7 @@ def parse_resume(file_path):
 
     skills = extract_skills(text)
     degree = extract_degree(text)
+    branch = extract_branch(text)
     experience = extract_experience(text)
     gpa = extract_gpa(text)
     certs = extract_certifications(text)
@@ -209,6 +239,7 @@ def parse_resume(file_path):
     result = {
         "name": name,
         "degree": degree,
+        "branch": branch,
         "skills": skills,
         "gpa": gpa,
         "experience": experience,
@@ -216,5 +247,5 @@ def parse_resume(file_path):
         "raw_text_preview": text[:500],  # First 500 chars for debugging
     }
 
-    logger.info(f"Resume parsed: degree={degree}, skills={len(skills)}, exp={experience}y, gpa={gpa}")
+    logger.info(f"Resume parsed: degree={degree}, branch={branch}, skills={len(skills)}, exp={experience}y, gpa={gpa}")
     return result
