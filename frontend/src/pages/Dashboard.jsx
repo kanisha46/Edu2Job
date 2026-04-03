@@ -87,13 +87,13 @@ const Dashboard = () => {
               <p>Your AI-powered career matrix is fully synchronized and ready.</p>
               
               <div className="gamification-badges-epic" style={{ marginTop: '16px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <span className="badge" style={{ background: 'rgba(255,255,255,0.15)', padding: '8px 16px', borderRadius: '100px', fontWeight: '800', color: 'white', border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(10px)' }}>
+                <span className="badge" style={{ background: 'var(--surface)', padding: '8px 16px', borderRadius: '100px', fontWeight: '800', color: 'var(--text-900)', border: '1px solid var(--border)', backdropFilter: 'blur(10px)' }}>
                   🏆 Title: {gamification.title}
                 </span>
-                <span className="badge" style={{ background: 'rgba(255,255,255,0.15)', padding: '8px 16px', borderRadius: '100px', fontWeight: '800', color: 'white', border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(10px)' }}>
+                <span className="badge" style={{ background: 'var(--surface)', padding: '8px 16px', borderRadius: '100px', fontWeight: '800', color: 'var(--text-900)', border: '1px solid var(--border)', backdropFilter: 'blur(10px)' }}>
                   ⭐ {gamification.points} Points
                 </span>
-                <span className="badge" style={{ background: 'rgba(255,255,255,0.15)', padding: '8px 16px', borderRadius: '100px', fontWeight: '800', color: 'white', border: '1px solid rgba(255,255,255,0.3)', backdropFilter: 'blur(10px)' }}>
+                <span className="badge" style={{ background: 'var(--surface)', padding: '8px 16px', borderRadius: '100px', fontWeight: '800', color: 'var(--text-900)', border: '1px solid var(--border)', backdropFilter: 'blur(10px)' }}>
                   🔥 {gamification.streak} Day Streak
                 </span>
               </div>

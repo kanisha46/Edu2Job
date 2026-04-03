@@ -16,6 +16,18 @@
   --space-5: 48px;
   --space-6: 64px;
 
+  /* Color Palette */
+  --emerald-50: #ecfdf5; --emerald-100: #d1fae5; --emerald-600: #059669; --emerald-700: #047857;
+  --rose-50: #fff1f2; --rose-100: #ffe4e6; --rose-500: #ef4444; --rose-600: #e11d48; --rose-700: #be123c;
+  --blue-50: #eff6ff; --blue-100: #dbeafe; --blue-600: #2563eb;
+  --purple-50: #faf5ff; --purple-100: #f3e8ff; --purple-600: #9333ea;
+  --orange-50: #fff7ed; --orange-100: #ffedd5; --orange-600: #ea580c;
+  --amber-100: #fef3c7; --amber-600: #d97706; --amber-700: #b45309;
+  --red-500: #ef4444; --green-500: #22c55e;
+  --indigo-50: #eef2ff; --indigo-100: #e0e7ff; --indigo-600: #4f46e5;
+  --border-bronze: rgba(139, 69, 19, 0.3);
+  --glass-glow: 0 0 15px rgba(0, 112, 243, 0.1);
+
   /* Premium Light Theme */
   --bg:            #FAFAFA; /* Pristine pristine white/off-white */
   --bg-light:      #FFFFFF;
@@ -72,10 +84,10 @@ body.dark-theme {
 
   --text-900:      #FFFFFF; 
   --text-800:      #EAEAEA;
-  --text-700:      #A0A0A0;
-  --text-600:      #888888;
-  --text-500:      #666666;
-  --text-400:      #444444;
+  --text-700:      #D1D5DB;
+  --text-600:      #9CA3AF;
+  --text-500:      #888888;
+  --text-400:      #707070;
 
   /* Strict Accent - Neon Light Blue / Aqua */
   --primary:       #38BDF8; 
@@ -97,6 +109,7 @@ body.dark-theme {
   --glass-card-bg:      rgba(10, 10, 10, 0.8);
   --glass-card-border:  rgba(255, 255, 255, 0.1);
   --card-bg:            rgba(15, 15, 15, 0.5);
+  --input-bg:           rgba(0, 0, 0, 0.4);
 }
 
 /* ---- Reset ---- */

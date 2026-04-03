@@ -59,8 +59,11 @@
 .user-card-nav {
   display: flex; align-items: center; gap: 12px; width: 100%;
 }
-.user-card-nav:hover {
+.sidebar.dark .user-card-nav:hover {
   background: rgba(255,255,255,0.08);
+}
+.sidebar.light .user-card-nav:hover {
+  background: var(--bg);
 }
 .user-avatar {
   width: 40px; height: 40px; border-radius: 50%;
@@ -76,10 +79,15 @@
 .user-name { 
   font-size: 0.875rem; 
   font-weight: 600; 
-  color: #fff;
   white-space: nowrap; 
   overflow: hidden; 
   text-overflow: ellipsis; 
+}
+.sidebar.dark .user-name {
+  color: #fff;
+}
+.sidebar.light .user-name {
+  color: var(--text-900);
 }
 .user-role { 
   font-size: 0.75rem; 
